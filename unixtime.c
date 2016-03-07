@@ -32,6 +32,12 @@
 
 #include "unixtime.h"
 
+#ifdef WIN32
+#define timegm _mkgmtime
+#else
+#define timegm portable_timegm
+#endif
+
 /* Some systems have a version of this called timegm(), but it's not portable */
 static time_t portable_timegm(struct tm *tm)
 {
@@ -90,7 +96,7 @@ time_t ConvertToUnixTime(const char* StringTime, const char* Format,
 	Time.tm_mon  -= 1;
 
 	/* Calculate and return the Unix time. */
-	time_t thetime = portable_timegm(&Time);
+	time_t thetime = timegm(&Time);
 
 	/* Add our timezone offset to the time.
 	 * Note also that we SUBTRACT these times. We want the

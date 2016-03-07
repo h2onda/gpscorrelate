@@ -41,6 +41,11 @@
 #include "correlate.h"
 
 #define GPS_EXIT_WARNING 2
+#ifdef WIN32
+#define TIMEFORMAT "%a %b %#d %H:%M:%S %Y UTC"
+#else
+#define TIMEFORMAT "%a %b %e %T %Y UTC"
+#endif
 
 /* Command line options structure. */
 static const struct option program_options[] = {
@@ -229,9 +234,9 @@ static int FixDatestamp(const char* File, int AdjustmentHours, int AdjustmentMin
 			char GPSTimeFormat[100];
 
 			strftime(PhotoTimeFormat, sizeof(PhotoTimeFormat),
-				 "%a %b %e %T %Y UTC", gmtime(&PhotoTime));
+				 TIMEFORMAT, gmtime(&PhotoTime));
 			strftime(GPSTimeFormat, sizeof(GPSTimeFormat),
-				 "%a %b %e %T %Y UTC", gmtime(&GPSTime));
+				 TIMEFORMAT, gmtime(&GPSTime));
 			printf(_("%s: Wrong timestamp:\n   Photo:     %s\n"
 				 "   GPS:       %s\n   Corrected: %s\n"),
 					File, PhotoTimeFormat, GPSTimeFormat, PhotoTimeFormat);
